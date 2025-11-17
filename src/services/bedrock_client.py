@@ -67,18 +67,22 @@ Based on the event logs and screenshots provided, create a JSON workflow definit
 Output ONLY valid JSON matching this schema:
 {{
     "workflow_id": "string",
-    "name": "string", 
-    "description": "string",
+    "name": "string - descriptive name for the workflow",
+    "description": "string - what this workflow accomplishes",
     "version": "1.0.0",
-    "application": "string",
+    "application": "string - target application name",
     "steps": [
         {{
             "step_id": "string",
-            "action": "CLICK|TYPE_TEXT|PRESS_KEY|etc",
-            "description": "string",
+            "action": "CLICK|TYPE_TEXT|PRESS_KEY|DOUBLE_CLICK|RIGHT_CLICK|SCROLL|DRAG|WAIT|NAVIGATE",
+            "description": "string - human readable description",
             "selector": {{
-                "type": "coordinates|text|xpath",
-                "value": "selector value"
+                "type": "text",
+                "value": "visible text or label of UI element",
+                "fallback": {{
+                    "type": "coordinates",
+                    "value": {{"x": number, "y": number}}
+                }}
             }},
             "parameters": {{}},
             "wait_after": 0.5,
@@ -91,14 +95,38 @@ Output ONLY valid JSON matching this schema:
     "metadata": {{}}
 }}
 
+IMPORTANT: For CLICK actions, ALWAYS include both:
+1. Primary selector with type "text" (the visible label/text of the element)
+2. Fallback selector with type "coordinates" (the exact x,y from event data)
+
+This ensures workflows are both intelligent (text-based) and reliable (coordinate backup).
+
 Generate the workflow JSON:"""
 
         # For now, text-only analysis (we'll add vision in next iteration)
+# Build content with text and optional screenshots
+        content = []
+        
+        # Add screenshots if provided
+        if screenshots:
+            for i, screenshot_base64 in enumerate(screenshots):
+                content.append({
+                    "image": {
+                        "format": "png",
+                        "source": {
+                            "bytes": screenshot_base64
+                        }
+                    }
+                })
+        
+        # Add the text prompt
+        content.append({"text": prompt})
+        
         body = {
             "messages": [
                 {
                     "role": "user",
-                    "content": [{"text": prompt}]
+                    "content": content
                 }
             ],
             "inferenceConfig": {

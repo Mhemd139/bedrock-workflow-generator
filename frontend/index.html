@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bedrock Workflow Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { display: flex; gap: 20px; }
+        .panel { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #232f3e; }
+        h2 { color: #ff9900; margin-top: 0; }
+        textarea { width: 100%; height: 400px; font-family: monospace; font-size: 12px; }
+        button { background: #ff9900; color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 4px; margin: 10px 0; }
+        button:hover { background: #e88b00; }
+        .step { background: #f9f9f9; padding: 10px; margin: 10px 0; border-left: 4px solid #ff9900; }
+        .step-header { font-weight: bold; color: #232f3e; }
+        .selector { color: #666; font-size: 12px; margin-top: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        #loading { display: none; color: #ff9900; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🤖 Bedrock Workflow Generator</h1>
+    <p>Convert recorded user sessions into intelligent automation workflows using Amazon Nova Pro</p>
+    
+    <div class="container">
+        <div class="panel">
+            <h2>📥 Input: Session Recording</h2>
+            <button onclick="loadSample()">Load Sample Session</button>
+            <textarea id="input" placeholder="Paste session JSON here..."></textarea>
+        </div>
+        
+        <div class="panel">
+            <h2>📤 Output: Generated Workflow</h2>
+            <button onclick="generate()">🚀 Generate Workflow</button>
+            <div id="loading">⏳ Nova Pro is analyzing your session...</div>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        const sampleSession = {
+            session_id: "demo-login-001",
+            start_time: new Date().toISOString(),
+            application: "Chrome Browser",
+            events: [
+                {
+                    event_id: "evt-001",
+                    timestamp: new Date().toISOString(),
+                    event_type: "MOUSE_CLICK",
+                    data: { x: 540, y: 320, button: "left" },
+                    ocr_text: "Login Page\\nUsername:\\nPassword:\\nRemember me\\nSign In"
+                },
+                {
+                    event_id: "evt-002",
+                    timestamp: new Date().toISOString(),
+                    event_type: "TEXT_INPUT",
+                    data: { text: "admin@company.com" }
+                },
+                {
+                    event_id: "evt-003",
+                    timestamp: new Date().toISOString(),
+                    event_type: "MOUSE_CLICK",
+                    data: { x: 540, y: 420, button: "left" },
+                    ocr_text: "Login Page\\nUsername: admin@company.com\\nPassword:\\nRemember me\\nSign In"
+                },
+                {
+                    event_id: "evt-004",
+                    timestamp: new Date().toISOString(),
+                    event_type: "TEXT_INPUT",
+                    data: { text: "SecurePass123!" }
+                },
+                {
+                    event_id: "evt-005",
+                    timestamp: new Date().toISOString(),
+                    event_type: "MOUSE_CLICK",
+                    data: { x: 540, y: 520, button: "left" },
+                    ocr_text: "Login Page\\nUsername: admin@company.com\\nPassword: ••••••••••••\\nRemember me\\nSign In"
+                }
+            ]
+        };
+
+        function loadSample() {
+            document.getElementById('input').value = JSON.stringify(sampleSession, null, 2);
+        }
+
+        async function generate() {
+            const input = document.getElementById('input').value;
+            const output = document.getElementById('output');
+            const loading = document.getElementById('loading');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p class="error">Please paste session JSON first</p>';
+                return;
+            }
+
+            try {
+                JSON.parse(input); // Validate JSON
+            } catch (e) {
+                output.innerHTML = '<p class="error">Invalid JSON: ' + e.message + '</p>';
+                return;
+            }
+
+            loading.style.display = 'block';
+            output.innerHTML = '';
+
+            try {
+                const response = await fetch('http://localhost:8000/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session: JSON.parse(input), use_ai: true })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API error: ' + response.status);
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    displayWorkflow(result.workflow);
+                } else {
+                    throw new Error(result.error || 'Unknown error');
+                }
+            } catch (e) {
+                output.innerHTML = '<p class="error">Error: ' + e.message + '</p>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function displayWorkflow(workflow) {
+            let html = `
+                <p class="success">✅ Generated: <strong>${workflow.name}</strong></p>
+                <p><strong>Description:</strong> ${workflow.description}</p>
+                <h3>Workflow Steps:</h3>
+            `;
+
+            workflow.steps.forEach(step => {
+                html += `
+                    <div class="step">
+                        <div class="step-header">${step.step_id}: ${step.action}</div>
+                        <div>${step.description}</div>
+                `;
+                
+                if (step.selector) {
+                    html += `<div class="selector">Selector: ${step.selector.type} = "${step.selector.value}"</div>`;
+                    if (step.selector.fallback) {
+                        html += `<div class="selector">Fallback: ${JSON.stringify(step.selector.fallback.value)}</div>`;
+                    }
+                }
+                
+                if (step.parameters && Object.keys(step.parameters).length > 0) {
+                    html += `<div class="selector">Parameters: ${JSON.stringify(step.parameters)}</div>`;
+                }
+                
+                html += '</div>';
+            });
+
+            html += '<h3>Raw JSON:</h3><pre style="background:#f0f0f0;padding:10px;overflow:auto;max-height:300px;">' + JSON.stringify(workflow, null, 2) + '</pre>';
+
+            document.getElementById('output').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
