@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
+from fastapi import Body
 
 from src.models.events import SessionTimeline
 from src.models.workflow import WorkflowDefinition
@@ -79,16 +80,29 @@ def generate_workflow(request: GenerateRequest):
         )
 
 
-@app.post("/generate/deterministic", response_model=GenerateResponse)
-def generate_deterministic(session: SessionTimeline):
-    """Generate workflow without AI (faster, deterministic)"""
-    
-    try:
-        workflow = generator.generate_from_events_only(session)
-        return GenerateResponse(success=True, workflow=workflow)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/generate/friend-format")
+async def generate_from_friend_format(friend_data: dict = Body(...)):
+    """Accept friend's recording format and convert it"""
+    try:
+        from src.tools.format_converter import convert_friend_format
+        
+        # Convert to our format
+        session = convert_friend_format(friend_data)
+        
+        # Generate workflow with AI
+        workflow = generator.generate_from_session(session)
+        
+        # Return as dict (not Pydantic model to avoid serialization issues)
+        return {
+            "success": True,
+            "workflow": workflow.model_dump(mode="json")
+        }
+    except Exception as e:
+        import traceback
+        print(f"Error converting format: {e}")
+        print(traceback.format_exc())
+        return {"success": False, "error": str(e)}
 
 if __name__ == "__main__":
     import uvicorn

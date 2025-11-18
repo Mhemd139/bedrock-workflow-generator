@@ -17,6 +17,83 @@
         .error { color: red; }
         .success { color: green; }
         #loading { display: none; color: #ff9900; font-weight: bold; }
+        
+        /* Tab Styles */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .tab-button {
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            font-size: 14px;
+            margin: 0;
+            transition: all 0.3s;
+        }
+        .tab-button:hover {
+            background: #e0e0e0;
+        }
+        .tab-button.active {
+            background: #ff9900;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px 0;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Human-readable text styles */
+        .text-output {
+            font-family: 'Courier New', monospace;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 13px;
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+        }
+        
+        /* JSON output styles */
+        .json-output {
+            background: #f0f0f0;
+            padding: 15px;
+            overflow: auto;
+            max-height: 600px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        .json-output pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        /* Copy button */
+        .copy-button {
+            background: #232f3e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .copy-button:hover {
+            background: #1a252f;
+        }
     </style>
 </head>
 <body>
@@ -32,13 +109,15 @@
         
         <div class="panel">
             <h2>📤 Output: Generated Workflow</h2>
-            <button onclick="generate()">🚀 Generate Workflow</button>
+            <button onclick="generateFriendFormat()">🔧 Generate (Friend Format)</button>
             <div id="loading">⏳ Nova Pro is analyzing your session...</div>
             <div id="output"></div>
         </div>
     </div>
 
     <script>
+        let currentWorkflow = null;
+
         const sampleSession = {
             session_id: "demo-login-001",
             start_time: new Date().toISOString(),
@@ -84,6 +163,51 @@
             document.getElementById('input').value = JSON.stringify(sampleSession, null, 2);
         }
 
+        async function generateFriendFormat() {
+            const input = document.getElementById('input').value;
+            const output = document.getElementById('output');
+            const loading = document.getElementById('loading');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p class="error">Please paste session JSON first</p>';
+                return;
+            }
+
+            try {
+                JSON.parse(input);
+            } catch (e) {
+                output.innerHTML = '<p class="error">Invalid JSON: ' + e.message + '</p>';
+                return;
+            }
+
+            loading.style.display = 'block';
+            output.innerHTML = '';
+
+            try {
+                const response = await fetch('http://localhost:8000/generate/friend-format', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: input
+                });
+
+                if (!response.ok) {
+                    throw new Error('API error: ' + response.status);
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    currentWorkflow = result.workflow;
+                    displayWorkflow(result.workflow);
+                } else {
+                    throw new Error(result.error || 'Unknown error');
+                }
+            } catch (e) {
+                output.innerHTML = '<p class="error">Error: ' + e.message + '</p>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
         async function generate() {
             const input = document.getElementById('input').value;
             const output = document.getElementById('output');
@@ -95,7 +219,7 @@
             }
 
             try {
-                JSON.parse(input); // Validate JSON
+                JSON.parse(input);
             } catch (e) {
                 output.innerHTML = '<p class="error">Invalid JSON: ' + e.message + '</p>';
                 return;
@@ -117,6 +241,7 @@
 
                 const result = await response.json();
                 if (result.success) {
+                    currentWorkflow = result.workflow;
                     displayWorkflow(result.workflow);
                 } else {
                     throw new Error(result.error || 'Unknown error');
@@ -128,11 +253,133 @@
             }
         }
 
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        function formatWorkflowAsText(workflow) {
+            const lines = [];
+            
+            // Header
+            lines.push(`## **${workflow.name}**`);
+            lines.push("");
+            lines.push(`**Description:** ${workflow.description}`);
+            if (workflow.application) {
+                lines.push(`**Application:** ${workflow.application}`);
+            }
+            lines.push(`**Total Steps:** ${workflow.steps.length}`);
+            lines.push("");
+            lines.push("---");
+            lines.push("");
+            lines.push("## **Simplified Workflow (Human-Friendly Steps)**");
+            lines.push("");
+            
+            // Create human-friendly step descriptions
+            workflow.steps.forEach((step, idx) => {
+                let stepText = `${idx + 1}. `;
+                
+                // Build human-readable description based on action type
+                switch (step.action) {
+                    case 'CLICK':
+                        const button = step.parameters.button || 'left';
+                        const buttonText = button === 'left' ? 'Click' : button === 'right' ? 'Right-click' : button === 'middle' ? 'Middle-click' : 'Click';
+                        
+                        // Try to use selector text if available
+                        if (step.selector && step.selector.type === 'text') {
+                            stepText += `${buttonText} on **"${step.selector.value}"**.`;
+                        } else {
+                            stepText += `${step.description}.`;
+                        }
+                        break;
+                        
+                    case 'TYPE_TEXT':
+                        const text = step.parameters.text || '';
+                        stepText += `Type **"${text}"**.`;
+                        break;
+                        
+                    case 'PRESS_KEY':
+                        const key = step.parameters.key || '';
+                        const keyName = key.toLowerCase().includes('enter') ? '**Enter**' : 
+                                       key.toLowerCase().includes('esc') ? '**Esc**' : 
+                                       key.toLowerCase().includes('space') ? '**Space**' : 
+                                       `**${key}**`;
+                        stepText += `Press ${keyName}.`;
+                        break;
+                        
+                    case 'SCROLL':
+                        stepText += `Scroll the page.`;
+                        break;
+                        
+                    case 'DRAG':
+                        if (step.selector && step.selector.value.start_x !== undefined) {
+                            const coords = step.selector.value;
+                            stepText += `Drag from (${coords.start_x}, ${coords.start_y}) to (${coords.end_x}, ${coords.end_y}).`;
+                        } else {
+                            stepText += `${step.description}.`;
+                        }
+                        break;
+                        
+                    case 'NAVIGATE':
+                        const url = step.parameters.url || '';
+                        stepText += `Navigate to **${url}**.`;
+                        break;
+                        
+                    case 'WAIT':
+                        const duration = step.parameters.duration || step.wait_after || 0;
+                        stepText += `Wait for ${duration} seconds.`;
+                        break;
+                        
+                    default:
+                        // Fallback to description
+                        stepText += `${step.description}.`;
+                }
+                
+                lines.push(stepText);
+            });
+            
+            lines.push("");
+            lines.push("---");
+            lines.push("");
+            lines.push(`**Workflow ID:** ${workflow.workflow_id}`);
+            lines.push(`**Version:** ${workflow.version}`);
+            
+            return lines.join("\n");
+        }
+
         function displayWorkflow(workflow) {
             let html = `
                 <p class="success">✅ Generated: <strong>${workflow.name}</strong></p>
                 <p><strong>Description:</strong> ${workflow.description}</p>
-                <h3>Workflow Steps:</h3>
+                
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('pretty-view')">📊 Pretty View</button>
+                    <button class="tab-button" onclick="switchTab('text-view')">📝 Human Text</button>
+                    <button class="tab-button" onclick="switchTab('json-view')">🔧 Raw JSON</button>
+                </div>
+                
+                <!-- Pretty View Tab -->
+                <div id="pretty-view" class="tab-content active">
+                    <h3>Workflow Steps:</h3>
             `;
 
             workflow.steps.forEach(step => {
@@ -143,7 +390,12 @@
                 `;
                 
                 if (step.selector) {
-                    html += `<div class="selector">Selector: ${step.selector.type} = "${step.selector.value}"</div>`;
+                    const coords = step.selector.value;
+                    if (coords.start_x !== undefined) {
+                        html += `<div class="selector">Selector: ${step.selector.type} = Drag (${coords.start_x},${coords.start_y}) → (${coords.end_x},${coords.end_y})</div>`;
+                    } else {
+                        html += `<div class="selector">Selector: ${step.selector.type} = (${coords.x || 0}, ${coords.y || 0})</div>`;
+                    }
                     if (step.selector.fallback) {
                         html += `<div class="selector">Fallback: ${JSON.stringify(step.selector.fallback.value)}</div>`;
                     }
@@ -156,7 +408,23 @@
                 html += '</div>';
             });
 
-            html += '<h3>Raw JSON:</h3><pre style="background:#f0f0f0;padding:10px;overflow:auto;max-height:300px;">' + JSON.stringify(workflow, null, 2) + '</pre>';
+            html += `
+                </div>
+                
+                <!-- Human Text View Tab -->
+                <div id="text-view" class="tab-content">
+                    <button class="copy-button" onclick="copyToClipboard('text-content')">📋 Copy Text</button>
+                    <div class="text-output" id="text-content">${formatWorkflowAsText(workflow)}</div>
+                </div>
+                
+                <!-- JSON View Tab -->
+                <div id="json-view" class="tab-content">
+                    <button class="copy-button" onclick="copyToClipboard('json-content')">📋 Copy JSON</button>
+                    <div class="json-output">
+                        <pre id="json-content">${JSON.stringify(workflow, null, 2)}</pre>
+                    </div>
+                </div>
+            `;
 
             document.getElementById('output').innerHTML = html;
         }
