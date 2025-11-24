@@ -1,0 +1,461 @@
+{
+    "metadata": {
+        "startTimeSeconds": 1763488604,
+        "startTimeFormatted": "2025-11-18T17:56:44Z",
+        "totalSteps": 32
+    },
+    "actions": [
+        {
+            "step": 1,
+            "timestamp": "2025-11-18T17:56M:47Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 170,
+                "y": 1176,
+                "button": "Button.right"
+            },
+            "element": {
+                "name": "Firefox - 1 running window",
+                "control_type": "Button",
+                "automation_id": "308046B0AF4A39CB"
+            }
+        },
+        {
+            "step": 2,
+            "timestamp": "2025-11-18T17:56M:49Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 147,
+                "y": 1079,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Firefox",
+                "control_type": "ListItem",
+                "automation_id": "Open"
+            }
+        },
+        {
+            "step": 3,
+            "timestamp": "2025-11-18T17:56M:58Z",
+            "command": "TYPE",
+            "parameters": {
+                "text": "never"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 4,
+            "timestamp": "2025-11-18T17:56M:59Z",
+            "command": "PRESS",
+            "parameters": {
+                "key": "Key.space"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 5,
+            "timestamp": "2025-11-18T17:56M:59Z",
+            "command": "TYPE",
+            "parameters": {
+                "text": "gonna"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 6,
+            "timestamp": "2025-11-18T17:56M:59Z",
+            "command": "PRESS",
+            "parameters": {
+                "key": "Key.space"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 7,
+            "timestamp": "2025-11-18T17:57M:00Z",
+            "command": "TYPE",
+            "parameters": {
+                "text": "give"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 8,
+            "timestamp": "2025-11-18T17:57M:00Z",
+            "command": "PRESS",
+            "parameters": {
+                "key": "Key.space"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 9,
+            "timestamp": "2025-11-18T17:57M:00Z",
+            "command": "TYPE",
+            "parameters": {
+                "text": "pu"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 10,
+            "timestamp": "2025-11-18T17:57M:00Z",
+            "command": "PRESS",
+            "parameters": {
+                "key": "Key.space"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 11,
+            "timestamp": "2025-11-18T17:57M:01Z",
+            "command": "TYPE",
+            "parameters": {
+                "text": "uo"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 12,
+            "timestamp": "2025-11-18T17:57M:02Z",
+            "command": "PRESS",
+            "parameters": {
+                "key": "Key.enter"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 13,
+            "timestamp": "2025-11-18T17:57M:03Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 653,
+                "y": 359,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "never gonna give pu uo - Google Search \u2014 Mozilla Firefox",
+                "control_type": "Window",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 14,
+            "timestamp": "2025-11-18T17:57M:09Z",
+            "command": "DRAG",
+            "parameters": {
+                "start_x": 1917,
+                "start_y": 269,
+                "end_x": 1919,
+                "end_y": 410
+            },
+            "element": {
+                "name": "never gonna give you up - Google Search \u2014 Mozilla Firefox",
+                "control_type": "Window",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 15,
+            "timestamp": "2025-11-18T17:57M:10Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 866,
+                "y": 363,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Rick Astley - Never Gonna Give You Up (Official Video) (4K ...",
+                "control_type": "Text",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 16,
+            "timestamp": "2025-11-18T17:57M:17Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 76,
+                "y": 842,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Pause keyboard shortcut k",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 17,
+            "timestamp": "2025-11-18T17:57M:18Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 160,
+                "y": 832,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Unmute keyboard shortcut m",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 18,
+            "timestamp": "2025-11-18T17:57M:19Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 160,
+                "y": 832,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Mute keyboard shortcut m",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 19,
+            "timestamp": "2025-11-18T17:57M:20Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 847,
+                "y": 992,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Dislike this video",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 20,
+            "timestamp": "2025-11-18T17:57M:21Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 720,
+                "y": 984,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "like this video along with 18,646,423 other people",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 21,
+            "timestamp": "2025-11-18T17:57M:22Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 92,
+                "y": 849,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Play keyboard shortcut k",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 22,
+            "timestamp": "2025-11-18T17:57M:23Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 92,
+                "y": 849,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Pause keyboard shortcut k",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 23,
+            "timestamp": "2025-11-18T17:57M:25Z",
+            "command": "DRAG",
+            "parameters": {
+                "start_x": 107,
+                "start_y": 955,
+                "end_x": 158,
+                "end_y": 957
+            },
+            "element": {
+                "name": "Rick Astley",
+                "control_type": "Hyperlink",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 24,
+            "timestamp": "2025-11-18T17:57M:28Z",
+            "command": "DRAG",
+            "parameters": {
+                "start_x": 103,
+                "start_y": 937,
+                "end_x": 230,
+                "end_y": 959
+            },
+            "element": {
+                "name": "Rick Astley",
+                "control_type": "Hyperlink",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 25,
+            "timestamp": "2025-11-18T17:57M:29Z",
+            "command": "COPY",
+            "parameters": {
+                "content": "\r\nRick Astley\r\n"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 26,
+            "timestamp": "2025-11-18T17:57M:30Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 529,
+                "y": 124,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Search",
+                "control_type": "ComboBox",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 27,
+            "timestamp": "2025-11-18T17:57M:31Z",
+            "command": "PASTE",
+            "parameters": {
+                "content": "\r\nRick Astley\r\n"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 28,
+            "timestamp": "2025-11-18T17:57M:32Z",
+            "command": "PRESS",
+            "parameters": {
+                "key": "Key.enter"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 29,
+            "timestamp": "2025-11-18T17:57M:38Z",
+            "command": "DRAG",
+            "parameters": {
+                "start_x": 1906,
+                "start_y": 129,
+                "end_x": 1902,
+                "end_y": 285
+            },
+            "element": {
+                "name": "",
+                "control_type": "Group",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 30,
+            "timestamp": "2025-11-18T17:57M:39Z",
+            "command": "CLICK",
+            "parameters": {
+                "x": 839,
+                "y": 480,
+                "button": "Button.left"
+            },
+            "element": {
+                "name": "Show more",
+                "control_type": "Button",
+                "automation_id": ""
+            }
+        },
+        {
+            "step": 31,
+            "timestamp": "2025-11-18T17:57M:40Z",
+            "command": "PRESS",
+            "parameters": {
+                "key": "Key.esc"
+            },
+            "element": {
+                "name": "Unknown",
+                "control_type": "Unknown",
+                "automation_id": "N/A"
+            }
+        },
+        {
+            "step": 32,
+            "timestamp": "2025-11-18T17:57M:40Z",
+            "command": "STOP",
+            "parameters": {},
+            "element": {
+                "name": "N/A",
+                "control_type": "N/A",
+                "automation_id": "N/A"
+            }
+        }
+    ]
+}
